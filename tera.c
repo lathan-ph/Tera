@@ -96,16 +96,19 @@ struct editorConfig E;
 
 char *C_HL_extensions[] = { ".c", ".h", ".cpp", NULL };
 char *C_HL_keywords[] = {
-    "switch", "if", "while", "for", "break", "continue", "return", "else",
-    "struct", "union", "typedef", "static", "enum", "class", "case",
+    "alignas", "alignof", "break", "case", "const", "constexpr", "continue", "default",
+    "do", "else", "enum", "extern", "false", "for", "goto", "if", "inline", "nullptr",
+    "register", "restrict", "return", "signed", "sizeof", "static", "static_assert",
+    "struct", "switch", "thread_local", "true", "typedef", "typeof", "typeof_unqual",
+    "union", "unsigned", "volatile", "while"
 
-    "int|", "long|", "double|", "float|", "char|", "unsigned|", "signed|",
-    "void|", NULL
+    "auto|", "bool|", "char|", "double|", "float|", "int|", "long|", "short|", "void|",
+    NULL
 };
 
 struct editorSyntax HLDB[] = {
     {
-        "c",
+        "C",
         C_HL_extensions,
         C_HL_keywords,
         "//", "/*", "*/",
