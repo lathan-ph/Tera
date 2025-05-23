@@ -52,6 +52,9 @@ char *CS_HL_keywords[] = {
     "short|", "uint|", "ulong|", "ushort|", "void|", NULL
 };
 
+char *HTML_HL_extensions[] = { ".html", NULL };
+char *HTML_HL_keywords[] = { NULL };
+
 char *JS_HL_extensions[] = { ".js", NULL };
 char *JS_HL_keywords[] = {
     "abstract", "arguments", "await", "break", "case", "catch", "class", "const",
@@ -96,6 +99,13 @@ struct editorSyntax HLDB[] = {
         CS_HL_extensions,
         CS_HL_keywords,
         "//", "/*", "*/",
+        HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
+    },
+    {
+        "HTML",
+        HTML_HL_extensions,
+        HTML_HL_keywords,
+        "<!--", "<", ">",
         HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
     },
     {
