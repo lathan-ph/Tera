@@ -125,6 +125,21 @@ char *CPP_HL_keywords[] = {
     "float|", "int|", "long|", "short|", "void|", "wchar_t|", NULL
 };
 
+char *CS_HL_extensions[] = { ".cs", NULL };
+char *CS_HL_keywords[] = {
+    "abstract", "as", "base", "break", "case", "catch", "checked", "class", "const",
+    "continue", "default", "delegate", "do", "else", "enum", "event", "explicit",
+    "extern", "false", "finally", "fixed", "for", "foreach", "goto", "if", "implicit"
+    "in", "interface", "internal", "is", "lock", "namespace", "new", "null", "object",
+    "operator", "out", "override", "params", "private", "protected", "public", "readonly",
+    "ref", "return", "sealed", "sizeof", "stackalloc", "static", "string", "struct",
+    "switch", "this", "throw", "true", "try", "typeof", "unchecked", "unsafe", "using",
+    "using static", "virtual", "volatile", "while",
+
+    "bool|", "byte|","char|", "decimal|", "double|", "float|", "int|", "long|", "sbyte|",
+    "short|", "uint|", "ulong|", "ushort|", "void|", NULL
+};
+
 struct editorSyntax HLDB[] = {
     {
         "C",
@@ -137,6 +152,13 @@ struct editorSyntax HLDB[] = {
         "C++",
         CPP_HL_extensions,
         CPP_HL_keywords,
+        "//", "/*", "*/",
+        HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
+    },
+    {
+        "C#",
+        CS_HL_extensions,
+        CS_HL_keywords,
         "//", "/*", "*/",
         HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
     },
