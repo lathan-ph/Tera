@@ -94,16 +94,35 @@ struct editorConfig E;
 
 /*** FILETYPES ***/
 
-char *C_HL_extensions[] = { ".c", ".h", ".cpp", NULL };
+char *C_HL_extensions[] = { ".c", ".h", NULL };
 char *C_HL_keywords[] = {
     "alignas", "alignof", "break", "case", "const", "constexpr", "continue", "default",
     "do", "else", "enum", "extern", "false", "for", "goto", "if", "inline", "nullptr",
     "register", "restrict", "return", "signed", "sizeof", "static", "static_assert",
     "struct", "switch", "thread_local", "true", "typedef", "typeof", "typeof_unqual",
-    "union", "unsigned", "volatile", "while"
+    "union", "unsigned", "volatile", "while",
 
     "auto|", "bool|", "char|", "double|", "float|", "int|", "long|", "short|", "void|",
     NULL
+};
+
+char *CPP_HL_extensions[] = { ".cpp", NULL };
+char *CPP_HL_keywords[] = {
+    "alignas", "alignof", "and", "and_eq", "asm", "atomic_cancel", "atomic_commit",
+    "atomic_noexcept", "bitand", "bitor", "break", "case" "catch", "class", "compl",
+    "concept", "const", "consteval", "constexpr", "constinit", "const_cast",
+    "continue", "contract_assert", "co_await", "co_return", "co_yield", "decltype",
+    "default", "delete", "do", "dynamic_cast", "else", "enum", "explicit", "export",
+    "extern", "false", "for", "friend", "goto", "if", "inline", "mutable", "namespace",
+    "new", "noexcept", "not", "not_eq", "nullptr", "operator", "or", "or_eq",
+    "private", "protected", "public", "reflexpr", "register", "reinterpret_cast",
+    "requires", "return", "signed", "sizeof", "static", "static_assert", "static_cast",
+    "struct", "switch", "synchronized", "template", "this", "thread_local", "throw",
+    "true", "try", "typedef", "typeid", "typename", "union", "unsigned", "using",
+    "virtual", "volatile", "while", "xor", "xor_eq",
+
+    "auto|", "bool|", "char|", "char8_t|", "char16_t|", "char32_t|", "double|",
+    "float|", "int|", "long|", "short|", "void|", "wchar_t|", NULL
 };
 
 struct editorSyntax HLDB[] = {
@@ -111,6 +130,13 @@ struct editorSyntax HLDB[] = {
         "C",
         C_HL_extensions,
         C_HL_keywords,
+        "//", "/*", "*/",
+        HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
+    },
+    {
+        "C++",
+        CPP_HL_extensions,
+        CPP_HL_keywords,
         "//", "/*", "*/",
         HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
     },
