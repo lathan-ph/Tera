@@ -52,6 +52,20 @@ char *CS_HL_keywords[] = {
     "short|", "uint|", "ulong|", "ushort|", "void|", NULL
 };
 
+char *JS_HL_extensions[] = { ".js", NULL };
+char *JS_HL_keywords[] = {
+    "abstract", "arguments", "await", "break", "case", "catch", "class", "const",
+    "continue", "debugger", "default", "delete", "do", "else", "enum", "eval", "export",
+    "extends", "false", "final", "finally", "for", "function", "goto", "if", "implements",
+    "import", "in", "instanceof", "interface", "let", "native", "new", "null", "package",
+    "private", "protected", "public", "return", "static", "super", "switch", "synchronized",
+    "this", "throw", "throws", "transient", "true", "try", "typeof", "var", "volatile",
+    "while", "with", "yield",
+
+    "Boolean|", "byte|", "char|", "double|", "float|", "int|", "long|", "short|", "void|",
+    NULL
+};
+
 char *PY_HL_extensions[] = { ".py", NULL };
 char *PY_HL_keywords[] = {
     "and", "as", "assert", "async", "await", "break", "class", "continue", "def",
@@ -81,6 +95,13 @@ struct editorSyntax HLDB[] = {
         "C#",
         CS_HL_extensions,
         CS_HL_keywords,
+        "//", "/*", "*/",
+        HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
+    },
+    {
+        "JavaScript",
+        JS_HL_extensions,
+        JS_HL_keywords,
         "//", "/*", "*/",
         HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
     },
