@@ -71,6 +71,7 @@ struct editorConfig {
     int screenrows;
     int screencols;
     int numrows;
+    int ln_width;
     erow *row;
     int dirty;
     char *filename;
@@ -474,27 +475,41 @@ void editorRowDelChar(erow *row, int at) {
     E.dirty++;
 }
 
+int editorLineNumberWidth() {
+    int width = 1;
+    int n = E.numrows >= 1 ? E.numrows : 1;
+    while (n >= 10) {
+        width++;
+        n /= 10;
+    }
+
+    return width;
+}
+
 /*** EDITOR OPERATIONS ***/
 
 void editorInsertChar(int c) {
-    if (E.cy == E.numrows) editorInsertRow(E.numrows, "", 0);
-    editorRowInsertChar(&E.row[E.cy], E.cx, c);
+    if (E.cy == E.numrows) {
+        editorInsertRow(E.numrows, "", 0);
+        E.cx = (E.numrows % 10 == 0) ? E.ln_width + 2 : E.ln_width + 1;
+    }
+    editorRowInsertChar(&E.row[E.cy], E.cx - E.ln_width - 1, c);
     E.cx++;
 }
 
 void editorInsertNewLine() {
-    if (E.cx == 0) editorInsertRow(E.cy, "", 0);
+    if (E.cx == E.ln_width + 1) editorInsertRow(E.cy, "", 0);
     else {
         erow *row = &E.row[E.cy];
-        editorInsertRow(E.cy + 1, &row->chars[E.cx], row->size - E.cx);
+        editorInsertRow(E.cy + 1, &row->chars[E.cx - E.ln_width - 1], row->size - E.cx + E.ln_width + 1);
         row = &E.row[E.cy];
-        row->size = E.cx;
+        row->size = E.cx - E.ln_width - 1;
         row->chars[row->size] = '\0';
         editorUpdateRow(row);
     }
 
     E.cy++;
-    E.cx=0;
+    E.cx = E.ln_width + 1;
 }
 
 void editorDelChar() {
@@ -502,12 +517,12 @@ void editorDelChar() {
     if (E.cx == 0 && E.cy == 0) return;
 
     erow *row = &E.row[E.cy];
-    if (E.cx > 0) {
-        editorRowDelChar(row, E.cx - 1);
+    if (E.cx > E.ln_width + 1) {
+        editorRowDelChar(row, E.cx - E.ln_width - 2);
         E.cx--;
     }
     else {
-        E.cx = E.row[E.cy - 1].size;
+        E.cx = E.row[E.cy - 1].size + E.ln_width + 1;
         editorRowAppendString(&E.row[E.cy - 1], row->chars, row->size);
         editorDelRow(E.cy);
         E.cy--;
@@ -710,9 +725,15 @@ void editorDrawRows(struct abuf *ab) {
             else abAppend(ab, "~", 1);
         }
         else {
+            char ln[16];
+            int lnlen = snprintf(ln, sizeof(ln), "%*d ", E.ln_width, filerow + 1);
+            abAppend(ab, "\x1b[30m", 5);
+            abAppend(ab, ln, lnlen);
+            abAppend(ab, "\x1b[39m", 5);
+
             int len = E.row[filerow].rsize - E.coloff;
             if (len < 0) len = 0;
-            if (len > E.screencols) len = E.screencols;
+            if (len > E.screencols - E.ln_width - 2) len = E.screencols - E.ln_width - 2;
             char *c = &E.row[filerow].render[E.coloff];
             unsigned char *hl = &E.row[filerow].hl[E.coloff];
             int current_color = -1;
@@ -861,21 +882,24 @@ void editorMoveCursor(int key) {
 
     switch (key) {
         case ARROW_LEFT:
-            if (E.cx != 0) E.cx--;
+            if (E.cx != E.ln_width + 1) E.cx--;
             else if (E.cy > 0) {
                 E.cy--;
-                E.cx = E.row[E.cy].size;
+                E.cx = E.row[E.cy].size + E.ln_width + 1;
             }
             break;
         case ARROW_RIGHT:
-            if (row && E.cx < row->size) E.cx++;
-            else if (row && E.cx == row->size) {
+            if (row && E.cx < row->size + E.ln_width + 1) E.cx++;
+            else if (row && E.cx == row->size + E.ln_width + 1) {
                 E.cy++;
-                E.cx = 0;
+                E.cx = E.ln_width + 1;
             }
             break;
         case ARROW_UP:
-            if (E.cy != 0) E.cy--;
+            if (E.cy != 0) {
+                E.cy--;
+                E.cx = (E.cx < E.ln_width + 1) ? E.ln_width + 1 : E.cx;
+            }
             break;
         case ARROW_DOWN:
             if (E.cy < E.numrows) E.cy++;
@@ -883,8 +907,8 @@ void editorMoveCursor(int key) {
     }
 
     row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
-    int rowlen = row ? row->size : 0;
-    if (E.cx > rowlen) E.cx = rowlen;
+    int rowlen = row ? row->size + E.ln_width : 0;
+    if (E.cx > rowlen) E.cx = rowlen + 1;
 }
 
 void editorProcessKeypress() {
@@ -913,10 +937,10 @@ void editorProcessKeypress() {
             break;
 
         case HOME_KEY:
-            E.cx = 0;
+            E.cx = E.ln_width + 1;
             break;
         case END_KEY:
-            if (E.cy < E.numrows) E.cx = E.row[E.cy].size;
+            if (E.cy < E.numrows) E.cx = E.row[E.cy].size + E.ln_width + 1;
             break;
 
         case CTRL_KEY('f'):
@@ -972,6 +996,7 @@ void initEditor() {
     E.rowoff = 0;
     E.coloff = 0;
     E.numrows = 0;
+    E.ln_width = 0;
     E.row = NULL;
     E.dirty = 0;
     E.filename = NULL;
@@ -987,6 +1012,9 @@ int main(int argc, char *argv[]) {
     enableRawMode();
     initEditor();
     if (argc >= 2) editorOpen(argv[1]);
+
+    E.ln_width = editorLineNumberWidth();
+    E.cx = E.ln_width + 1;
 
     editorSetStatusMessage("HELP: Ctrl-F = Find | Ctrl-S = Save | Ctrl-Q = Quit");
 
