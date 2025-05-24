@@ -142,6 +142,19 @@ char *CSS_HL_keywords[] = {
 char *HTML_HL_extensions[] = { ".html", NULL };
 char *HTML_HL_keywords[] = { NULL };
 
+char *JV_HL_extensions[] = { ".java", NULL };
+char *JV_HL_keywords[] = {
+    "abstract", "assert", "break", "case", "catch", "class", "continue", "const", "default",
+    "do", "else", "enum", "exports", "extends", "final", "finally", "for", "goto", "if"
+    "implements", "import", "instanceof", "interface", "module", "native", "new", "package",
+    "private", "protected", "public", "requires", "return", "static", "strictfp", "super",
+    "switch", "synchronized", "this", "throw", "throws", "transient", "try", "var", "volatile",
+    "while",
+
+    "boolean|", "byte|", "char|", "double|", "float|", "int|", "long|", "short|", "void|",
+    NULL
+};
+
 char *JS_HL_extensions[] = { ".js", NULL };
 char *JS_HL_keywords[] = {
     "abstract", "arguments", "await", "break", "case", "catch", "class", "const",
@@ -200,6 +213,13 @@ struct editorSyntax HLDB[] = {
         HTML_HL_extensions,
         HTML_HL_keywords,
         "<!--", "<", ">",
+        HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
+    },
+    {
+        "Java",
+        JV_HL_extensions,
+        JV_HL_keywords,
+        "//", "/*", "*/",
         HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
     },
     {
