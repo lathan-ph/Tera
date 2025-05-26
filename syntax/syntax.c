@@ -139,6 +139,17 @@ char *CSS_HL_keywords[] = {
     "@scope|", "@starting-style|", "@supports|", NULL
 };
 
+char *GO_HL_extensions[] = { ".go", NULL };
+char *GO_HL_keywords[] = {
+    "break", "case", "chan", "const", "continue", "default", "defer", "else", "fallthrough",
+    "for", "func", "go", "goto", "if", "import", "interface", "map", "package", "range",
+    "return", "select", "struct", "switch", "type", "var",
+
+    "bool|", "complex64|", "complex128|", "float32|", "float64|", "int|", "int8|", "int16|",
+    "int32|", "int64|", "string|", "uint|", "uint8|", "uint16|", "uint32|", "uint64|", "uintptr|",
+    NULL
+};
+
 char *HTML_HL_extensions[] = { ".html", NULL };
 char *HTML_HL_keywords[] = { NULL };
 
@@ -206,6 +217,13 @@ struct editorSyntax HLDB[] = {
         CSS_HL_extensions,
         CSS_HL_keywords,
         "", "/*", "*/",
+        HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
+    },
+    {
+        "Go",
+        GO_HL_extensions,
+        GO_HL_keywords,
+        "//", "/*", "*/",
         HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
     },
     {
