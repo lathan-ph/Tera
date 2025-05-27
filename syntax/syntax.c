@@ -180,6 +180,13 @@ char *JS_HL_keywords[] = {
     NULL
 };
 
+char *LUA_HL_extensions[] = { ".lua", NULL };
+char *LUA_HL_keywords[] = {
+    "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto",
+    "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until",
+    "while", NULL
+};
+
 char *PY_HL_extensions[] = { ".py", NULL };
 char *PY_HL_keywords[] = {
     "and", "as", "assert", "async", "await", "break", "class", "continue", "def",
@@ -245,6 +252,13 @@ struct editorSyntax HLDB[] = {
         JS_HL_extensions,
         JS_HL_keywords,
         "//", "/*", "*/",
+        HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
+    },
+    {
+        "Lua",
+        LUA_HL_extensions,
+        LUA_HL_keywords,
+        "--", "--[[", "]]",
         HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS,
     },
     {
